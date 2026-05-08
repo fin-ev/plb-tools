@@ -1,0 +1,2524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plumbline — The Financial Evolution</title>
+<style>
+  :root {
+    --bg: #f8f5ed;
+    --surface: #ffffff;
+    --surface-2: #fbf9f3;
+    --border: #e8e3d4;
+    --border-strong: #d0c9b5;
+    --text: #1f1c18;
+    --text-muted: #6b6557;
+    --text-subtle: #9c9489;
+
+    --brass: #a47e3b;
+    --brass-soft: #f3ead6;
+    --brass-deep: #8b6a2f;
+
+    --britt: #8a5a3c;
+    --britt-soft: #f3eae3;
+    --you: #2c5d6e;
+    --you-soft: #e4ecef;
+
+    --track1: #2c5d6e;
+    --track1-soft: #e4ecef;
+    --track2: #5d3d6b;
+    --track2-soft: #ece4ef;
+
+    --done: #486f5c;
+    --done-soft: #e3ebe6;
+    --warn: #a47e3b;
+    --warn-soft: #f3ead6;
+    --danger: #8a3a2c;
+    --danger-soft: #f5e2dd;
+
+    --shadow-sm: 0 1px 2px rgba(31,28,24,0.04);
+    --shadow-md: 0 4px 12px rgba(31,28,24,0.06);
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .mono {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.92em;
+  }
+
+  /* ======== TOP BAR ======== */
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .brand-logo {
+    flex-shrink: 0;
+  }
+  .brand-text { display: flex; flex-direction: column; }
+  .brand-name {
+    font-family: ui-serif, "Iowan Old Style", "Apple Garamond", Baskerville, "Times New Roman", serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    color: var(--text);
+    line-height: 1;
+  }
+  .brand-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  /* ======== TABS ======== */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 3px;
+  }
+  .tab {
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    font-family: inherit;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ======== PERSON TOGGLE ======== */
+  .person-toggle {
+    display: flex;
+    gap: 0;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 3px;
+  }
+  .person-btn {
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    font-family: inherit;
+  }
+  .person-btn:hover { color: var(--text); }
+  .person-btn.active.britt {
+    background: var(--britt-soft);
+    color: var(--britt);
+    box-shadow: var(--shadow-sm);
+  }
+  .person-btn.active.you {
+    background: var(--you-soft);
+    color: var(--you);
+    box-shadow: var(--shadow-sm);
+  }
+  .person-btn.active.both {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .brand-date {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    margin-left: auto;
+  }
+
+  /* ======== MAIN ======== */
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ======== HERO HEADER ======== */
+  .hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--brass);
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .hero-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .hero h1 {
+    font-family: ui-serif, "Iowan Old Style", "Apple Garamond", Baskerville, serif;
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .hero-meta {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .hero-meta strong { color: var(--text); font-weight: 600; }
+
+  /* ======== PROGRESS RING ======== */
+  .progress-summary {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .progress-num {
+    font-size: 28px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    font-family: ui-serif, serif;
+  }
+  .progress-num .total {
+    font-size: 18px;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .progress-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+  .progress-bar {
+    width: 140px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .progress-bar > div {
+    height: 100%;
+    background: var(--brass);
+    transition: width 0.3s ease;
+  }
+
+  /* ======== TODAY VIEW ======== */
+  .today-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .today-grid.both {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 900px) {
+    .today-grid.both { grid-template-columns: 1fr; }
+  }
+
+  .person-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 0;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+  }
+
+  /* The plumbline — vertical brass anchor */
+  .person-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 14px;
+    bottom: 14px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--brass) 0%, var(--brass) 92%, var(--brass-deep) 92%, var(--brass-deep) 100%);
+    border-radius: 0 1px 1px 0;
+  }
+
+  .person-card-header {
+    padding: 14px 24px 14px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .person-card-header.britt { background: var(--britt-soft); color: var(--britt); }
+  .person-card-header.you { background: var(--you-soft); color: var(--you); }
+  .person-card-header .progress-mini {
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+    font-weight: 500;
+    opacity: 0.85;
+  }
+
+  .section {
+    padding: 18px 24px 18px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .section-label .pill {
+    font-size: 10px;
+    background: var(--brass-soft);
+    color: var(--brass-deep);
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  /* ======== TASK LIST ======== */
+  .task {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    cursor: pointer;
+    user-select: none;
+  }
+  .task:hover .task-text { color: var(--text); }
+  .task-check {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 4px;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s ease;
+    background: var(--surface);
+  }
+  .task-check svg {
+    width: 12px;
+    height: 12px;
+    stroke: var(--surface);
+    stroke-width: 3;
+    fill: none;
+    opacity: 0;
+    transition: opacity 0.12s ease;
+  }
+  .task.done .task-check {
+    background: var(--done);
+    border-color: var(--done);
+  }
+  .task.done .task-check svg { opacity: 1; }
+  .task-text {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.45;
+    flex: 1;
+  }
+  .task.done .task-text {
+    color: var(--text-subtle);
+    text-decoration: line-through;
+    text-decoration-color: var(--text-subtle);
+  }
+  .task-time {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    background: var(--surface-2);
+    padding: 1px 8px;
+    border-radius: 4px;
+    margin-top: 1px;
+  }
+  .task-from-bench {
+    font-size: 10px;
+    background: var(--brass-soft);
+    color: var(--brass-deep);
+    padding: 1px 6px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+
+  /* ======== HEADLINE TASK (#1) ======== */
+  .headline-task {
+    background: linear-gradient(135deg, #fef5e0 0%, #faecc7 100%);
+    border: 1px solid #ecd9a8;
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .headline-task .check-big {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--brass-deep);
+    border-radius: 6px;
+    background: var(--surface);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .headline-task.done .check-big {
+    background: var(--brass-deep);
+  }
+  .headline-task.done .check-big svg { opacity: 1; }
+  .headline-task .check-big svg {
+    width: 16px;
+    height: 16px;
+    stroke: #fff;
+    stroke-width: 3;
+    fill: none;
+    opacity: 0;
+  }
+  .headline-task .text {
+    font-size: 15px;
+    font-weight: 500;
+    color: #5e4615;
+    line-height: 1.4;
+  }
+  .headline-task.done .text {
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  /* ======== EOD FIELDS ======== */
+  .eod-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .eod-field label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .eod-field textarea, .eod-field input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 14px;
+    background: var(--surface-2);
+    color: var(--text);
+    resize: vertical;
+    min-height: 36px;
+  }
+  .eod-field textarea:focus, .eod-field input:focus {
+    outline: none;
+    border-color: var(--brass);
+    background: var(--surface);
+  }
+
+  /* ======== BENCH ======== */
+  .bench-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .bench-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .bench-item .bench-text { flex: 1; }
+  .bench-actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .bench-action {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.12s;
+  }
+  .bench-action:hover {
+    background: var(--surface);
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  .bench-action.promote {
+    background: var(--brass-soft);
+    color: var(--brass-deep);
+    border-color: var(--brass);
+  }
+  .bench-action.promote:hover {
+    background: var(--brass);
+    color: white;
+  }
+  .bench-add {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .bench-add input {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 13px;
+    background: var(--surface-2);
+  }
+  .bench-add input:focus {
+    outline: none;
+    border-color: var(--brass);
+    background: var(--surface);
+  }
+  .bench-add button {
+    background: var(--brass);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .bench-add button:hover { background: var(--brass-deep); }
+  .bench-empty {
+    font-size: 12px;
+    color: var(--text-subtle);
+    font-style: italic;
+    padding: 8px 0;
+  }
+
+  /* ======== WEEK VIEW ======== */
+  .week-banner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--brass);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .week-theme {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brass-deep);
+  }
+  .week-title {
+    font-family: ui-serif, "Iowan Old Style", serif;
+    font-size: 22px;
+    font-weight: 500;
+    margin-top: 2px;
+    margin-bottom: 4px;
+  }
+  .week-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .week-nav {
+    display: flex;
+    gap: 6px;
+  }
+  .week-nav button {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.12s;
+  }
+  .week-nav button:hover:not(:disabled) {
+    background: var(--surface);
+    color: var(--text);
+  }
+  .week-nav button.active {
+    background: var(--brass);
+    color: white;
+    border-color: var(--brass);
+  }
+
+  /* ======== TRACKING METRICS ======== */
+  .tracking-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .metric-card:hover { border-color: var(--border-strong); }
+  .metric-card.done {
+    background: var(--done-soft);
+    border-color: var(--done);
+  }
+  .metric-card.done .metric-status {
+    color: var(--done);
+  }
+  .metric-label {
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .metric-status {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .metric-status::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  /* ======== DAY GRID ======== */
+  .day-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 900px) { .day-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 500px) { .day-grid { grid-template-columns: 1fr; } }
+  .day-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    transition: all 0.12s;
+  }
+  .day-card.today {
+    border-color: var(--brass);
+    border-width: 2px;
+    padding: 13px;
+  }
+  .day-card.past { opacity: 0.6; }
+  .day-card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .day-name {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+  .day-card.today .day-name { color: var(--brass-deep); }
+  .day-num {
+    font-family: ui-serif, serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .day-headline {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    line-height: 1.3;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+  }
+  .day-progress {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brass-deep);
+    font-variant-numeric: tabular-nums;
+    margin-top: 6px;
+  }
+
+  /* ======== TOP-5 LIST ======== */
+  .top5 {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 16px;
+  }
+  .top5 h3 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .top5 h3 .who {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .top5 h3 .who.britt { background: var(--britt-soft); color: var(--britt); }
+  .top5 h3 .who.you { background: var(--you-soft); color: var(--you); }
+  .top5 ol {
+    list-style: none;
+    counter-reset: top5;
+  }
+  .top5 ol li {
+    counter-increment: top5;
+    padding: 8px 0 8px 28px;
+    position: relative;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .top5 ol li:last-child { border-bottom: none; }
+  .top5 ol li::before {
+    content: counter(top5);
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 20px;
+    height: 20px;
+    background: var(--brass-soft);
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--brass-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ======== MONTH VIEW ======== */
+  .month-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 800px) { .month-summary { grid-template-columns: 1fr; } }
+  .week-summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .week-summary-card .num {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+  .week-summary-card .theme {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--brass-deep);
+    margin: 4px 0;
+  }
+  .week-summary-card .focus {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  table.goals {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    font-size: 13px;
+  }
+  table.goals thead { background: var(--surface-2); }
+  table.goals th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+  table.goals td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  table.goals tbody tr:last-child td { border-bottom: none; }
+  table.goals tbody tr:hover { background: var(--surface-2); }
+  table.goals .goal-num {
+    font-variant-numeric: tabular-nums;
+    color: var(--brass-deep);
+    font-weight: 700;
+    width: 32px;
+  }
+  table.goals .goal-text {
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  /* ======== STATUS PILL ======== */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border: 1px solid transparent;
+    background: var(--surface-2);
+    color: var(--text-muted);
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .status-pill::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .status-pill[data-status="not_started"] {
+    background: var(--surface-2);
+    color: var(--text-muted);
+    border-color: var(--border);
+  }
+  .status-pill[data-status="in_progress"] {
+    background: var(--warn-soft);
+    color: var(--warn);
+    border-color: #ecd9a8;
+  }
+  .status-pill[data-status="done"] {
+    background: var(--done-soft);
+    color: var(--done);
+    border-color: #c2d6ce;
+  }
+
+  /* ======== NOT-IN-MAY BANNER ======== */
+  .not-in-may {
+    background: var(--danger-soft);
+    border: 1px solid #e8c6bd;
+    border-left: 3px solid var(--danger);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-top: 20px;
+  }
+  .not-in-may .label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--danger);
+    margin-bottom: 6px;
+  }
+  .not-in-may .body {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.45;
+  }
+
+  /* ======== REFERENCE VIEW ======== */
+  .ref-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 800px) { .ref-grid { grid-template-columns: 1fr; } }
+
+  .ref-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .ref-card h2 {
+    font-family: ui-serif, serif;
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ref-card .ref-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .ref-card.full {
+    grid-column: 1 / -1;
+  }
+
+  /* Architecture diagram */
+  .arch-flow {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-family: ui-monospace, monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--text);
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* Track sections */
+  .track {
+    margin-bottom: 20px;
+  }
+  .track:last-child { margin-bottom: 0; }
+  .track-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid;
+  }
+  .track-header.t1 { border-color: var(--track1); }
+  .track-header.t2 { border-color: var(--track2); }
+  .track-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .track-label.t1 { color: var(--track1); }
+  .track-label.t2 { color: var(--track2); }
+  .track-name {
+    font-family: ui-serif, serif;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .offer {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+  }
+  .offer:last-child { margin-bottom: 0; }
+  .offer-name {
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .offer-tag {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 8px;
+    letter-spacing: 0.04em;
+  }
+  .offer-tag.free { background: #e3ebe6; color: #486f5c; }
+  .offer-tag.paid { background: var(--brass-soft); color: var(--brass-deep); }
+  .offer-tag.future { background: #f5e2dd; color: #8a3a2c; }
+  .offer-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    line-height: 1.45;
+  }
+  .offer-meta strong { color: var(--text); font-weight: 600; }
+
+  /* Cadence calendar */
+  .cadence-table { width: 100%; font-size: 13px; }
+  .cadence-table td { padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .cadence-table tr:last-child td { border-bottom: none; }
+  .cadence-table .when { font-weight: 600; color: var(--text); width: 40%; }
+  .cadence-table .who { color: var(--text-muted); font-size: 12px; }
+  .cadence-table .dur { color: var(--text-subtle); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* Risks */
+  .risk {
+    border-left: 3px solid var(--danger);
+    padding: 8px 0 8px 14px;
+    margin-bottom: 14px;
+  }
+  .risk:last-child { margin-bottom: 0; }
+  .risk-name { font-weight: 600; font-size: 13px; }
+  .risk-fix { font-size: 13px; color: var(--text-muted); margin-top: 2px; line-height: 1.45; }
+
+  /* Pitch */
+  .pitch {
+    background: var(--brass-soft);
+    border: 1px solid #e3d4ad;
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--brass-deep);
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .pitch::before {
+    content: '"';
+    font-size: 24px;
+    line-height: 0;
+    vertical-align: -4px;
+    margin-right: 4px;
+    opacity: 0.5;
+  }
+
+  /* ======== BUILD QUEUE WIDGET ======== */
+  .build-queue {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 22px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .build-queue h3 {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .build-queue h3 .count {
+    background: var(--brass-soft);
+    color: var(--brass-deep);
+    font-size: 11px;
+    padding: 1px 8px;
+    border-radius: 10px;
+  }
+  .build-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .build-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .build-item:last-child { border-bottom: none; }
+  .build-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--brass-soft);
+    color: var(--brass-deep);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+  .build-name { flex: 1; color: var(--text); }
+  .build-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 8px;
+  }
+  .build-meta .dot { color: var(--text-subtle); }
+
+  /* ======== SAVE INDICATOR ======== */
+  .save-indicator {
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .save-indicator.visible { opacity: 1; }
+  .save-indicator.visible::before {
+    content: '✓';
+    color: var(--done);
+    margin-right: 6px;
+    font-weight: bold;
+  }
+
+  /* Reset */
+  .reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .reset-btn:hover {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border-color: var(--danger);
+  }
+
+  /* Pre-launch banner */
+  .prelaunch {
+    background: linear-gradient(135deg, var(--brass-soft) 0%, #f8e7c4 100%);
+    border: 1px solid #e3d4ad;
+    border-radius: var(--radius-lg);
+    padding: 22px 26px;
+    margin-bottom: 20px;
+  }
+  .prelaunch .label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--brass-deep);
+    margin-bottom: 6px;
+  }
+  .prelaunch h2 {
+    font-family: ui-serif, serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .prelaunch p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .prelaunch ul {
+    margin-top: 10px;
+    list-style: none;
+  }
+  .prelaunch li {
+    font-size: 13px;
+    padding: 4px 0 4px 22px;
+    position: relative;
+  }
+  .prelaunch li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--brass-deep);
+    font-weight: 600;
+  }
+
+  /* Weekly review */
+  .review-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--brass);
+    border-radius: var(--radius-lg);
+    padding: 22px 26px;
+    margin-top: 16px;
+    box-shadow: var(--shadow-sm);
+  }
+  .review-card h3 {
+    font-family: ui-serif, serif;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .review-card .review-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+
+  /* Callout */
+  .callout {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--warn);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--text);
+  }
+  .callout strong { color: var(--warn); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <svg class="brand-logo" width="14" height="32" viewBox="0 0 14 32" xmlns="http://www.w3.org/2000/svg">
+        <line x1="7" y1="0" x2="7" y2="22" stroke="#a47e3b" stroke-width="1.5"/>
+        <polygon points="3,22 11,22 7,30" fill="#a47e3b"/>
+      </svg>
+      <div class="brand-text">
+        <div class="brand-name">Plumbline</div>
+        <div class="brand-sub">The Financial Evolution</div>
+      </div>
+    </div>
+    <div class="tabs" id="viewTabs">
+      <button class="tab active" data-view="today">Today</button>
+      <button class="tab" data-view="week">Week</button>
+      <button class="tab" data-view="month">Month</button>
+      <button class="tab" data-view="reference">Reference</button>
+    </div>
+    <div class="person-toggle" id="personToggle">
+      <button class="person-btn britt" data-person="britt">Britt</button>
+      <button class="person-btn you" data-person="you">Bridgette</button>
+      <button class="person-btn both" data-person="both">Both</button>
+    </div>
+    <div class="brand-date" id="brandDate"></div>
+  </div>
+</div>
+
+<main>
+  <div class="view active" id="view-today"></div>
+  <div class="view" id="view-week"></div>
+  <div class="view" id="view-month"></div>
+  <div class="view" id="view-reference"></div>
+</main>
+
+<div class="save-indicator" id="saveIndicator">Saved</div>
+
+<script>
+/* ============================================================
+   PLUMBLINE — The Financial Evolution
+   Daily operating cadence. Single-file, vanilla JS, persists to localStorage.
+   ============================================================ */
+
+const STORAGE_KEY = 'tfe-plumbline-v1';
+
+/* ---------- DAYS ---------- */
+
+const DAYS = {
+  '2026-05-11': {
+    day: 'MONDAY', label: 'May 11', headline: 'Week 1 — start the engine',
+    britt: {
+      one: 'Schedule all 5 Kleo posts for the week',
+      timed: [
+        { time: '9:00 AM', text: 'Stand-up with Bridgette (10 min)' },
+        { time: '2:00 PM', text: 'Whale outreach shadow prep — Bridgette briefs targets (15 min)' }
+      ],
+      shoulder: [
+        { text: 'Review 5 whale prospect profiles with Bridgette (30 min, 2:15 PM)' }
+      ],
+      alone: [
+        { text: 'Draft 4 June LinkedIn posts using prompt pack' },
+        { text: 'Skool: post weekly kickoff thread + reply to all weekend comments' },
+        { text: 'Pull list of 50 prospect LinkedIn URLs into the whale tracker (Bridgette provides ICP)' }
+      ]
+    },
+    you: {
+      one: 'April month-end close — large client P&L review pass',
+      timed: [
+        { time: '9:00 AM', text: 'Stand-up with Britt (10 min)' },
+        { time: '2:15 PM', text: 'Whale prep with Britt (15 min brief)' }
+      ],
+      shoulder: [
+        { text: 'Whale prep with Britt — 15 min brief' }
+      ],
+      alone: [
+        { text: 'Send 20 whale messages (block 10:00–12:00)' },
+        { text: 'April close: large client reconciliation review' },
+        { text: 'Write the ICP one-pager Britt needs for prospect list' },
+        { text: 'Draft June LinkedIn prompt pack for Britt (24 prompts)' }
+      ]
+    }
+  },
+  '2026-05-12': {
+    day: 'TUESDAY', label: 'May 12', headline: 'Britt alone day — drafts and tracker',
+    britt: {
+      one: '4 June LinkedIn posts drafted',
+      timed: [{ time: '9:00 AM', text: 'Stand-up with Bridgette (10 min)' }],
+      shoulder: [],
+      alone: [
+        { text: '4 June LinkedIn posts (drafts to Bridgette\'s review folder by 4 PM)' },
+        { text: 'Skool: daily post + comment replies' },
+        { text: 'Whale tracker: enrich 25 prospects (LinkedIn → name, company, role, hook)' },
+        { text: 'Beehiiv research: review 3 newsletters in our space, note structure (15 min, NOT a rabbit hole)' }
+      ]
+    },
+    you: {
+      one: 'April close — large client journal entries done',
+      timed: [{ time: '9:00 AM', text: 'Stand-up with Britt (10 min)' }],
+      shoulder: [],
+      alone: [
+        { text: 'Send 20 whale messages' },
+        { text: 'April close: large client JEs + reconciliations' },
+        { text: 'Set up Beehiiv account (30 min cap)' },
+        { text: 'Review Britt\'s 4 LinkedIn drafts before EOD' }
+      ]
+    }
+  },
+  '2026-05-13': {
+    day: 'WEDNESDAY', label: 'May 13', headline: 'Whale shadow #1 + Beehiiv archive',
+    britt: {
+      one: 'Whale outreach shadow + Beehiiv archive started',
+      timed: [
+        { time: '9:00 AM', text: 'Stand-up with Bridgette (10 min)' },
+        { time: '10:00 AM', text: 'Whale shadow with Bridgette (45 min)' }
+      ],
+      shoulder: [{ text: 'Watch Bridgette send 5 whale messages live, take notes' }],
+      alone: [
+        { text: '4 June LinkedIn posts' },
+        { text: 'Skool: daily post + replies' },
+        { text: 'Beehiiv: import first 5 archived posts (Bridgette shows format Tue night)' }
+      ]
+    },
+    you: {
+      one: 'April close — small client reconciliation',
+      timed: [
+        { time: '9:00 AM', text: 'Stand-up with Britt (10 min)' },
+        { time: '10:00 AM', text: 'Whale shadow with Britt (45 min)' }
+      ],
+      shoulder: [{ text: 'Whale shadow — narrate decisions, show research → message flow' }],
+      alone: [
+        { text: 'Send 15 more whale messages (5 done in shadow)' },
+        { text: 'April close: small client recs + JEs' },
+        { text: 'Approve Britt\'s June LinkedIn drafts (batch review)' }
+      ]
+    }
+  },
+  '2026-05-14': {
+    day: 'THURSDAY', label: 'May 14', headline: 'Pre-close prep — final review tomorrow',
+    britt: {
+      one: '4 June LinkedIn posts + Beehiiv archive 5 more',
+      timed: [{ time: '9:00 AM', text: 'Stand-up with Bridgette (10 min)' }],
+      shoulder: [],
+      alone: [
+        { text: '4 June LinkedIn posts' },
+        { text: 'Beehiiv: import 5 more archived posts' },
+        { text: 'Skool: daily post + replies' },
+        { text: 'Whale tracker: enrich another 25 prospects' }
+      ]
+    },
+    you: {
+      one: 'April close — final review both clients, prep for delivery tomorrow',
+      timed: [{ time: '9:00 AM', text: 'Stand-up with Britt (10 min)' }],
+      shoulder: [],
+      alone: [
+        { text: 'Send 20 whale messages' },
+        { text: 'April close: final P&L + balance sheet review' },
+        { text: 'Draft client close email + Loom for both clients' },
+        { text: 'Approve Britt\'s drafts' }
+      ]
+    }
+  },
+  '2026-05-15': {
+    day: 'FRIDAY', label: 'May 15', headline: 'APRIL CLOSE DAY — deliver before 5 PM',
+    britt: {
+      one: '4 June LinkedIn posts + whale shadow round 2',
+      timed: [
+        { time: '9:00 AM', text: 'Stand-up with Bridgette (10 min)' },
+        { time: '1:00 PM', text: 'Whale shadow #2 with Bridgette (45 min)' },
+        { time: '3:00 PM', text: 'Weekly review with Bridgette (30 min)' }
+      ],
+      shoulder: [{ text: 'Whale shadow round 2 — Britt drafts 1 message, Bridgette edits live' }],
+      alone: [
+        { text: '4 June LinkedIn posts (16 of 24 done by EOD)' },
+        { text: 'Beehiiv: 5 more archive imports (15 of 15 done)' },
+        { text: 'Skool: weekly recap post' }
+      ]
+    },
+    you: {
+      one: 'Deliver April close to both clients before 5 PM',
+      timed: [
+        { time: '9:00 AM', text: 'Stand-up with Britt (10 min)' },
+        { time: '1:00 PM', text: 'Whale shadow with Britt (45 min)' },
+        { time: '3:00 PM', text: 'Weekly review (30 min)' }
+      ],
+      shoulder: [{ text: 'Whale shadow + weekly review' }],
+      alone: [
+        { text: 'Send last 20 whale messages of week (100 total this week)' },
+        { text: 'Send close packages to both clients (Loom + P&L + BS + cash position)' },
+        { text: 'Draft 8 June LinkedIn posts (your half) over weekend OR Mon AM' }
+      ]
+    }
+  }
+};
+
+const STANDING_DAILIES_BRITT = [
+  'Skool community: 1 post + reply to all comments',
+  'Inbox zero by 5 PM (client emails first)',
+  'LinkedIn: engage 15 min'
+];
+const STANDING_DAILIES_YOU = [
+  'Skool community: check in once',
+  'Inbox zero by 5 PM (client emails first)'
+];
+
+/* ---------- WEEKS ---------- */
+
+const WEEKS = [
+  {
+    id: 'wk1',
+    label: 'Week of May 11',
+    dates: 'Mon 5/11 – Sun 5/17',
+    theme: 'DELIVERY + FOUNDATION',
+    focus: 'Don\'t lose existing clients. Get the marketing engine producing.',
+    days: ['2026-05-11', '2026-05-12', '2026-05-13', '2026-05-14', '2026-05-15'],
+    metrics: [
+      { id: 'wk1-close', text: 'April close delivered Fri 5/15' },
+      { id: 'wk1-whales', text: '100 whale messages sent (Bridgette solo)' },
+      { id: 'wk1-li', text: '24 June LinkedIn drafts in queue' },
+      { id: 'wk1-beehiiv', text: 'Beehiiv account live + 15 archive posts imported' }
+    ],
+    top5_britt: [
+      'Schedule 5 Kleo posts for the week (Mon 8 AM)',
+      'Draft 16 June LinkedIn posts using Bridgette\'s prompts (4/day Tue–Fri)',
+      'Beehiiv archive import (once Bridgette sets up the account, est. Wed)',
+      'Skool: post 1×/day, reply to every comment within 4 hrs',
+      'Whale outreach shadow: Wed + Fri, 30 min each'
+    ],
+    top5_you: [
+      'April month-end close — large client + small client',
+      'Send 20 whale outreach messages/day (100 total this week — Britt shadows Wed/Fri)',
+      'Set up Beehiiv account + import 10–15 archived posts (delegate import to Britt)',
+      'Draft 8 of 24 June LinkedIn posts (Britt drafts the other 16)',
+      'Sunday 5/17 evening — build next week\'s daily sheets'
+    ]
+  },
+  {
+    id: 'wk2',
+    label: 'Week of May 18',
+    dates: 'Mon 5/18 – Sun 5/24',
+    theme: 'FUNNEL BUILD',
+    focus: 'Close gets done. Build the Snapshot funnel end-to-end.',
+    days: ['2026-05-18', '2026-05-19', '2026-05-20', '2026-05-21', '2026-05-22'],
+    metrics: [
+      { id: 'wk2-snapshot', text: 'Money Leaks Snapshot live on ScoreApp' },
+      { id: 'wk2-popup', text: 'Website popup live (SquareSpace)' },
+      { id: 'wk2-emailseq', text: 'Email sequence built in FGF' },
+      { id: 'wk2-cashsurge', text: 'Cash Surge Sprint live in FG Funnels' },
+      { id: 'wk2-whales', text: 'Britt 10/day + Bridgette 10/day = 100 whale msgs' },
+      { id: 'wk2-yt', text: 'YouTube video #1 recorded' },
+      { id: 'wk2-beehiiv2', text: 'Beehiiv sequence live, May posts scheduled' }
+    ],
+    top5_britt: [
+      'Send 10 whale messages/day with Bridgette\'s review',
+      'Standing dailies: Skool + LinkedIn engagement',
+      'Beehiiv: schedule May posts, set up sequence',
+      'Help record + capture for YouTube video #1',
+      'Continue June LinkedIn drafts as needed'
+    ],
+    top5_you: [
+      'Build Money Leaks Snapshot in ScoreApp + integrate to FG Funnels',
+      'Build SquareSpace popup → Snapshot',
+      'Email sequence in FGF (will move to GHL in June)',
+      'Cash Surge Sprint funnel live',
+      'Record YouTube video #1'
+    ]
+  },
+  {
+    id: 'wk3',
+    label: 'Week of May 25',
+    dates: 'Mon 5/25 – Sat 5/31',
+    theme: 'CLOSE + LAUNCH',
+    focus: 'Convert pipeline. Finalize June.',
+    days: ['2026-05-25', '2026-05-26', '2026-05-27', '2026-05-28', '2026-05-29'],
+    metrics: [
+      { id: 'wk3-clients', text: 'Close 3 paying clients' },
+      { id: 'wk3-yt2', text: 'YouTube video #2 recorded + published' },
+      { id: 'wk3-li-scheduled', text: 'All June LinkedIn posts approved + scheduled' },
+      { id: 'wk3-beehiiv-june', text: 'June Beehiiv posts written + scheduled' },
+      { id: 'wk3-ghl', text: 'Internal team workflow built in GHL' },
+      { id: 'wk3-juneplan', text: 'June plan finalized' }
+    ],
+    top5_britt: [
+      'Send 20 whale messages/day (Britt now leads volume)',
+      'Schedule all June LinkedIn posts in Kleo',
+      'Schedule all June Beehiiv posts',
+      'Help publish + SEO YouTube video #2',
+      'Standing dailies: Skool + LinkedIn'
+    ],
+    top5_you: [
+      'Close 3 paying clients (the work from weeks 1–2 lands here)',
+      'Record + publish YouTube video #2',
+      'Build internal team workflow in GHL',
+      'Finalize June plan + travel + campaigns',
+      'Friday 5/29 — draft June Plumbline plan'
+    ]
+  }
+];
+
+/* ---------- GOALS ---------- */
+
+const GOALS = [
+  { num: 3,  text: 'Month-end close, all clients',                                    owner: 'Bridgette + Tatiana',                target: 'May 15', week: 'Wk 1' },
+  { num: 4,  text: 'June LinkedIn posts written / approved / scheduled',              owner: 'Britt (draft) → Bridgette (approve)', target: 'May 28', week: 'Wk 1–3' },
+  { num: 5,  text: '5 weekly LinkedIn posts via Kleo',                                owner: 'Britt',                              target: 'Ongoing', week: 'Every wk' },
+  { num: 6,  text: 'Beehiiv: account, archive (10–15), sequence, May+June scheduled', owner: 'Britt (build) → Bridgette (review)',  target: 'May 30', week: 'Wk 1–3' },
+  { num: 1,  text: 'Close 3 new paying clients',                                      owner: 'Bridgette (lead) → Britt (support)',  target: 'May 31', week: 'Wk 1–3' },
+  { num: 7,  text: 'Money Leaks Snapshot live on ScoreApp',                           owner: 'Bridgette',                          target: 'May 22', week: 'Wk 2' },
+  { num: 9,  text: 'Website popup live (SquareSpace)',                                owner: 'Bridgette',                          target: 'May 22', week: 'Wk 2' },
+  { num: 11, text: 'Cash Surge Sprint in FG Funnels (rebuild GHL in June)',           owner: 'Bridgette',                          target: 'May 23', week: 'Wk 2' },
+  { num: 8,  text: 'GHL email sequence (will move from FGF in June)',                 owner: 'Bridgette',                          target: 'May 24', week: 'Wk 2' },
+  { num: 12, text: 'Snapshot email sequence + automations (FGF, then GHL June)',      owner: 'Bridgette',                          target: 'May 24', week: 'Wk 2' },
+  { num: 2,  text: 'Record + publish 2 YouTube videos',                               owner: 'Bridgette (record) → Britt (publish/SEO)', target: 'May 30', week: 'Wk 2–3' },
+  { num: 10, text: 'Internal team workflow in GHL (non-bookkeeping)',                 owner: 'Bridgette',                          target: 'May 29', week: 'Wk 3' },
+  { num: 13, text: 'June plan + travel + campaigns finalized',                        owner: 'Bridgette + Britt',                  target: 'May 31', week: 'Wk 3' }
+];
+
+/* ---------- BUILD QUEUE (active builds) ---------- */
+
+const BUILD_QUEUE = [
+  { id: 1, num: '01', name: 'FG Funnels → GoHighLevel migration', priority: 'P1', effort: 'L', status: 'Active' },
+  { id: 2, num: '02', name: 'FinancialCents workflows (BooXkeeping)', priority: 'P1', effort: 'M', status: 'Active' },
+  { id: 3, num: '03', name: 'GHL Agency internal + external workflows', priority: 'P1', effort: 'L', status: 'Active' },
+  { id: 4, num: '04', name: 'YouTube channel — new niche update', priority: 'P1', effort: 'M', status: 'Active' },
+  { id: 5, num: '05', name: 'CTA list for social + YouTube', priority: 'P1', effort: 'S', status: 'Active' }
+];
+
+/* ---------- STANDING RHYTHM ---------- */
+
+const STANDING_RHYTHM = [
+  { when: 'Mon–Fri 9:00 AM', what: 'Daily stand-up', who: 'Bridgette + Britt', dur: '10 min' },
+  { when: 'Mon 8:00 AM', what: 'Britt schedules week\'s Kleo posts', who: 'Britt', dur: '30 min' },
+  { when: 'Wed + Fri (varies)', what: 'Whale outreach shoulder session', who: 'Bridgette + Britt', dur: '45 min' },
+  { when: 'Fri 3:00 PM', what: 'Weekly review + next-week setup', who: 'Bridgette + Britt', dur: '30 min' },
+  { when: 'Sun 7:00 PM', what: 'Build next week\'s daily sheets', who: 'Bridgette alone', dur: '30 min' },
+  { when: 'Daily', what: 'Skool community presence', who: 'Britt (primary)', dur: '20 min' }
+];
+
+const RISKS = [
+  { name: '"I get caught up in strategy."', fix: 'Daily prep sheet has a 🎯 #1. If your #1 isn\'t execution-flavored 4 days a week, you\'re drifting.' },
+  { name: '"I get bogged down with client work."', fix: 'Tatiana takes anything she can. Anything left is yours, but time-boxed: April close ends Fri May 15, no extensions. Mondays of weeks 2–3, client work stays in the morning block only.' },
+  { name: '"Britt falls back on LinkedIn."', fix: 'Solved by this system. Her daily sheet has 4–6 binary tasks. LinkedIn is one line, not the whole day.' },
+  { name: '"Britt won\'t reach out to whales."', fix: 'You do all 100 messages in week 1. She shadows 2× that week. Wk 2 she does 10/day with your review. Wk 3 she does 20/day. Train, then trust.' }
+];
+
+/* ---------- STATE ---------- */
+
+let state = loadState();
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) { console.warn('State load failed:', e); }
+  return {
+    person: 'britt',
+    view: 'today',
+    selectedWeek: 'wk1',
+    tasks: {},
+    metrics: {},
+    goals: {},
+    eod: {},
+    parking: {},
+    review: {},
+    bench: { britt: [], you: [] },
+    promoted: {} // key: `${date}|${person}|alone|${idx}` → true if it came from bench
+  };
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    showSaveIndicator();
+  } catch (e) { console.warn('State save failed:', e); }
+}
+
+let saveTimeout;
+function showSaveIndicator() {
+  const el = document.getElementById('saveIndicator');
+  el.classList.add('visible');
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => el.classList.remove('visible'), 1200);
+}
+
+/* ---------- DATE HELPERS ---------- */
+
+function todayKey() {
+  const now = new Date();
+  const y = now.getFullYear(), m = String(now.getMonth()+1).padStart(2,'0'), d = String(now.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
+}
+
+function pickDisplayDate() {
+  const today = todayKey();
+  if (DAYS[today]) return today;
+  const allKeys = Object.keys(DAYS).sort();
+  if (today < allKeys[0]) return allKeys[0];
+  if (today > allKeys[allKeys.length-1]) return allKeys[allKeys.length-1];
+  return allKeys[0];
+}
+
+function formatHumanDate(key) {
+  const [y,m,d] = key.split('-').map(Number);
+  const date = new Date(y, m-1, d);
+  const weekday = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][date.getDay()];
+  const month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1];
+  return `${weekday} · ${month} ${d}, ${y}`;
+}
+
+function formatBrandDate() {
+  return formatHumanDate(todayKey());
+}
+
+/* ---------- TASK HELPERS ---------- */
+
+function tk(date, person, section, idx) {
+  return `${date}|${person}|${section}|${idx}`;
+}
+function isTaskDone(date, person, section, idx) {
+  return !!state.tasks[tk(date, person, section, idx)];
+}
+function toggleTask(date, person, section, idx) {
+  state.tasks[tk(date, person, section, idx)] = !state.tasks[tk(date, person, section, idx)];
+  saveState();
+}
+
+function getAloneTasks(date, person) {
+  const sheet = DAYS[date];
+  if (!sheet) return [];
+  const base = sheet[person].alone.slice();
+  // Also include any promoted-from-bench tasks for this date+person
+  const promotedKey = `${date}|${person}|alone-promoted`;
+  const promoted = state.promoted[promotedKey] || [];
+  return base.concat(promoted.map(text => ({ text, fromBench: true })));
+}
+
+function countDayTasks(date, person) {
+  if (!DAYS[date]) return { done: 0, total: 0 };
+  const sheet = DAYS[date][person];
+  let total = 1;
+  let done = isTaskDone(date, person, 'one', 0) ? 1 : 0;
+  ['timed', 'shoulder'].forEach(sec => {
+    sheet[sec].forEach((_, i) => {
+      total++;
+      if (isTaskDone(date, person, sec, i)) done++;
+    });
+  });
+  const aloneTasks = getAloneTasks(date, person);
+  aloneTasks.forEach((_, i) => {
+    total++;
+    if (isTaskDone(date, person, 'alone', i)) done++;
+  });
+  const standing = person === 'britt' ? STANDING_DAILIES_BRITT : STANDING_DAILIES_YOU;
+  standing.forEach((_, i) => {
+    total++;
+    if (isTaskDone(date, person, 'standing', i)) done++;
+  });
+  return { done, total };
+}
+
+/* ---------- BENCH HELPERS ---------- */
+
+function addBenchItem(person, text) {
+  if (!text.trim()) return;
+  state.bench[person] = state.bench[person] || [];
+  state.bench[person].push(text.trim());
+  saveState();
+}
+
+function removeBenchItem(person, idx) {
+  state.bench[person].splice(idx, 1);
+  saveState();
+}
+
+function promoteBenchItem(date, person, idx) {
+  const text = state.bench[person][idx];
+  state.bench[person].splice(idx, 1);
+  const promotedKey = `${date}|${person}|alone-promoted`;
+  state.promoted[promotedKey] = state.promoted[promotedKey] || [];
+  state.promoted[promotedKey].push(text);
+  saveState();
+}
+
+/* ---------- TODAY VIEW ---------- */
+
+function renderToday() {
+  const view = document.getElementById('view-today');
+  const date = pickDisplayDate();
+  const today = todayKey();
+  const isPreview = today < date;
+
+  let html = '';
+
+  if (isPreview) {
+    html += `
+      <div class="prelaunch">
+        <div class="label">Pre-launch — cadence starts Monday</div>
+        <h2>Today is ${formatHumanDate(today)}. Plumbline kicks in Mon May 11.</h2>
+        <p>You're looking at a preview of Monday's daily sheet. Use this weekend to:</p>
+        <ul>
+          <li>Calendar the standing rhythm (Reference tab → Standing Rhythm)</li>
+          <li>Bridgette: Sunday 7 PM, build next week's daily sheets if anything's missing</li>
+          <li>Britt: review the offer architecture (Reference tab → What we sell)</li>
+        </ul>
+      </div>
+    `;
+  }
+
+  html += renderBuildQueueWidget();
+
+  const sheet = DAYS[date];
+  html += renderHero(date, sheet, isPreview);
+
+  const person = state.person;
+  if (person === 'both') {
+    html += `<div class="today-grid both">`;
+    html += renderPersonCard(date, 'britt', sheet);
+    html += renderPersonCard(date, 'you', sheet);
+    html += `</div>`;
+  } else {
+    html += `<div class="today-grid">`;
+    html += renderPersonCard(date, person, sheet);
+    html += `</div>`;
+  }
+
+  view.innerHTML = html;
+  attachTodayHandlers(date);
+}
+
+function renderBuildQueueWidget() {
+  return `
+    <div class="build-queue">
+      <h3>Active builds <span class="count">${BUILD_QUEUE.length}</span></h3>
+      <div class="build-list">
+        ${BUILD_QUEUE.map(b => `
+          <div class="build-item">
+            <div class="build-num">${b.num}</div>
+            <div class="build-name">${escape(b.name)}</div>
+            <div class="build-meta">
+              <span>${b.priority}</span>
+              <span class="dot">·</span>
+              <span>${b.effort}</span>
+              <span class="dot">·</span>
+              <span>${b.status}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderHero(date, sheet, isPreview) {
+  const britt = countDayTasks(date, 'britt');
+  const you = countDayTasks(date, 'you');
+  const total = { done: britt.done + you.done, total: britt.total + you.total };
+  const pct = total.total > 0 ? Math.round((total.done / total.total) * 100) : 0;
+
+  return `
+    <div class="hero">
+      <div class="hero-row">
+        <div>
+          <h1>${sheet.day}, ${sheet.label}</h1>
+          <div class="hero-meta">
+            ${escape(sheet.headline)}
+            ${isPreview ? '' : ` · <strong>Stand-up 9:00 AM</strong>`}
+          </div>
+        </div>
+        <div class="progress-summary">
+          <div>
+            <div class="progress-num">${total.done}<span class="total"> / ${total.total}</span></div>
+            <div class="progress-label">Tasks complete · ${pct}%</div>
+            <div class="progress-bar"><div style="width:${pct}%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderPersonCard(date, person, sheet) {
+  const data = sheet[person];
+  const count = countDayTasks(date, person);
+  const standing = person === 'britt' ? STANDING_DAILIES_BRITT : STANDING_DAILIES_YOU;
+  const who = person === 'britt' ? 'BRITT' : 'BRIDGETTE';
+  const eodKeyDone = `${date}|${person}|done`;
+  const eodKeyStuck = `${date}|${person}|stuck`;
+  const eodKeyTom = `${date}|${person}|tomorrow`;
+  const parkKey = `${date}|${person}`;
+  const aloneTasks = getAloneTasks(date, person);
+  const benchItems = state.bench[person] || [];
+
+  return `
+    <div class="person-card">
+      <div class="person-card-header ${person}">
+        <span>${who}'s daily sheet</span>
+        <span class="progress-mini">${count.done}/${count.total} done</span>
+      </div>
+
+      <div class="section">
+        <div class="section-label">🎯 Today's #1 — if nothing else gets done</div>
+        <div class="headline-task ${isTaskDone(date, person, 'one', 0) ? 'done' : ''}" data-section="one" data-idx="0">
+          <div class="check-big">
+            <svg viewBox="0 0 16 16"><polyline points="3 8 6 11 13 4"/></svg>
+          </div>
+          <div>
+            <div class="text">${escape(data.one)}</div>
+          </div>
+        </div>
+      </div>
+
+      ${data.timed.length > 0 ? `
+      <div class="section">
+        <div class="section-label">⏰ Time-locked</div>
+        ${data.timed.map((t, i) => taskRow(date, person, 'timed', i, t.text, t.time)).join('')}
+      </div>` : ''}
+
+      ${data.shoulder.length > 0 ? `
+      <div class="section">
+        <div class="section-label">🔨 Shoulder work <span class="pill">with partner</span></div>
+        ${data.shoulder.map((t, i) => taskRow(date, person, 'shoulder', i, t.text)).join('')}
+      </div>` : ''}
+
+      ${aloneTasks.length > 0 ? `
+      <div class="section">
+        <div class="section-label">🧠 Alone work</div>
+        ${aloneTasks.map((t, i) => taskRow(date, person, 'alone', i, t.text || t, null, t.fromBench)).join('')}
+      </div>` : ''}
+
+      <div class="section">
+        <div class="section-label">📲 Standing dailies <span class="pill">every day</span></div>
+        ${standing.map((t, i) => taskRow(date, person, 'standing', i, t)).join('')}
+      </div>
+
+      <div class="section">
+        <div class="section-label">🪜 Bench — up next ${benchItems.length > 0 ? `<span class="pill">${benchItems.length}</span>` : ''}</div>
+        <div class="bench-list">
+          ${benchItems.length === 0
+            ? `<div class="bench-empty">Nothing on the bench yet. Add items as the week\'s plan evolves.</div>`
+            : benchItems.map((item, i) => `
+                <div class="bench-item">
+                  <div class="bench-text">${escape(item)}</div>
+                  <div class="bench-actions">
+                    <button class="bench-action promote" data-bench-promote="${i}">→ Today</button>
+                    <button class="bench-action" data-bench-remove="${i}">×</button>
+                  </div>
+                </div>
+              `).join('')}
+        </div>
+        <div class="bench-add">
+          <input type="text" data-bench-input placeholder="Add an item to the bench..." />
+          <button data-bench-add>Add</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">🚫 Not today (parking lot)</div>
+        <div class="eod-fields">
+          <div class="eod-field">
+            <textarea data-eodkey="park|${parkKey}" placeholder="What you're explicitly NOT doing today...">${escape(state.parking[parkKey] || '')}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-label">📊 End-of-day (5 min before logoff)</div>
+        <div class="eod-fields">
+          <div class="eod-field">
+            <label>What got DONE today</label>
+            <textarea data-eodkey="eod|${eodKeyDone}" placeholder="Specifics, not 'lots'...">${escape(state.eod[eodKeyDone] || '')}</textarea>
+          </div>
+          <div class="eod-field">
+            <label>What's STUCK and needs partner</label>
+            <textarea data-eodkey="eod|${eodKeyStuck}" placeholder="Blockers to surface in stand-up...">${escape(state.eod[eodKeyStuck] || '')}</textarea>
+          </div>
+          <div class="eod-field">
+            <label>Top 1 for tomorrow</label>
+            <input type="text" data-eodkey="eod|${eodKeyTom}" placeholder="One sentence." value="${escape(state.eod[eodKeyTom] || '')}">
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function taskRow(date, person, section, idx, text, time, fromBench) {
+  const done = isTaskDone(date, person, section, idx);
+  return `
+    <div class="task ${done ? 'done' : ''}" data-section="${section}" data-idx="${idx}">
+      <div class="task-check">
+        <svg viewBox="0 0 16 16"><polyline points="3 8 6 11 13 4"/></svg>
+      </div>
+      <div class="task-text">${escape(text)}${fromBench ? `<span class="task-from-bench">← from bench</span>` : ''}</div>
+      ${time ? `<div class="task-time">${escape(time)}</div>` : ''}
+    </div>
+  `;
+}
+
+function attachTodayHandlers(date) {
+  const persons = state.person === 'both' ? ['britt', 'you'] : [state.person];
+  persons.forEach((person, pi) => {
+    const cards = document.querySelectorAll('.person-card');
+    const card = cards[pi];
+    if (!card) return;
+
+    card.querySelectorAll('.task').forEach(el => {
+      el.addEventListener('click', () => {
+        const section = el.dataset.section;
+        const idx = parseInt(el.dataset.idx, 10);
+        toggleTask(date, person, section, idx);
+        renderToday();
+      });
+    });
+
+    const headline = card.querySelector('.headline-task');
+    if (headline) {
+      headline.addEventListener('click', () => {
+        toggleTask(date, person, 'one', 0);
+        renderToday();
+      });
+    }
+
+    card.querySelectorAll('[data-eodkey]').forEach(el => {
+      el.addEventListener('input', () => {
+        const [type, k1, k2, k3] = el.dataset.eodkey.split('|');
+        const fullKey = [k1, k2, k3].filter(Boolean).join('|');
+        if (type === 'eod') state.eod[fullKey] = el.value;
+        else if (type === 'park') state.parking[fullKey] = el.value;
+        saveState();
+      });
+    });
+
+    // Bench handlers
+    card.querySelectorAll('[data-bench-promote]').forEach(el => {
+      el.addEventListener('click', () => {
+        const idx = parseInt(el.dataset.benchPromote, 10);
+        promoteBenchItem(date, person, idx);
+        renderToday();
+      });
+    });
+    card.querySelectorAll('[data-bench-remove]').forEach(el => {
+      el.addEventListener('click', () => {
+        const idx = parseInt(el.dataset.benchRemove, 10);
+        removeBenchItem(person, idx);
+        renderToday();
+      });
+    });
+    const addBtn = card.querySelector('[data-bench-add]');
+    const addInput = card.querySelector('[data-bench-input]');
+    if (addBtn && addInput) {
+      const addItem = () => {
+        const v = addInput.value;
+        if (v.trim()) {
+          addBenchItem(person, v);
+          addInput.value = '';
+          renderToday();
+        }
+      };
+      addBtn.addEventListener('click', addItem);
+      addInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') { e.preventDefault(); addItem(); }
+      });
+    }
+  });
+}
+
+/* ---------- WEEK VIEW ---------- */
+
+function renderWeek() {
+  const view = document.getElementById('view-week');
+  const wk = WEEKS.find(w => w.id === state.selectedWeek) || WEEKS[0];
+  const today = todayKey();
+
+  const metricsDone = wk.metrics.filter(m => state.metrics[m.id]).length;
+
+  let html = `
+    <div class="week-banner">
+      <div>
+        <div class="week-theme">${wk.theme}</div>
+        <div class="week-title">${wk.label}</div>
+        <div class="week-sub">${wk.dates} · ${escape(wk.focus)}</div>
+      </div>
+      <div class="week-nav">
+        ${WEEKS.map(w => `
+          <button class="${w.id === state.selectedWeek ? 'active' : ''}" data-week="${w.id}">
+            ${w.label.replace('Week of ', '')}
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  html += `<div class="section-label" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:10px;">
+    Tracking metric for the week — ${metricsDone}/${wk.metrics.length} hit
+  </div>`;
+  html += `<div class="tracking-grid">
+    ${wk.metrics.map(m => `
+      <div class="metric-card ${state.metrics[m.id] ? 'done' : ''}" data-metric="${m.id}">
+        <div class="metric-label">${escape(m.text)}</div>
+        <div class="metric-status">${state.metrics[m.id] ? 'Done' : 'Pending'}</div>
+      </div>
+    `).join('')}
+  </div>`;
+
+  html += `<div class="day-grid">
+    ${wk.days.map(d => {
+      const sheet = DAYS[d];
+      if (!sheet) {
+        const [y, m, dd] = d.split('-').map(Number);
+        const date = new Date(y, m-1, dd);
+        const weekday = ['SUN','MON','TUE','WED','THU','FRI','SAT'][date.getDay()];
+        return `<div class="day-card" style="opacity:0.5">
+          <div class="day-card-header">
+            <span class="day-name">${weekday}</span>
+          </div>
+          <div class="day-num">${dd}</div>
+          <div class="day-headline">Daily sheet to be drafted Sunday evening before this week.</div>
+        </div>`;
+      }
+      const isToday = d === today;
+      const isPast = d < today;
+      const counts = { britt: countDayTasks(d, 'britt'), you: countDayTasks(d, 'you') };
+      const total = counts.britt.done + counts.you.done;
+      const max = counts.britt.total + counts.you.total;
+      return `<div class="day-card ${isToday ? 'today' : ''} ${isPast ? 'past' : ''}">
+        <div class="day-card-header">
+          <span class="day-name">${sheet.day.slice(0,3)}</span>
+        </div>
+        <div class="day-num">${sheet.label.split(' ')[1]}</div>
+        <div class="day-progress">${total}/${max} done</div>
+        <div class="day-headline">${escape(sheet.headline)}</div>
+      </div>`;
+    }).join('')}
+  </div>`;
+
+  html += `<div class="today-grid both">
+    <div class="top5">
+      <h3>Top 5 <span class="who britt">BRITT</span></h3>
+      <ol>${wk.top5_britt.map(t => `<li>${escape(t)}</li>`).join('')}</ol>
+    </div>
+    <div class="top5">
+      <h3>Top 5 <span class="who you">BRIDGETTE</span></h3>
+      <ol>${wk.top5_you.map(t => `<li>${escape(t)}</li>`).join('')}</ol>
+    </div>
+  </div>`;
+
+  if (wk.id === 'wk1') {
+    html += `
+      <div class="review-card">
+        <h3>🏁 Friday weekly review (3 PM, 30 min)</h3>
+        <div class="review-sub">Score the week → diagnose breaks → set next week's #1 for each person → Sunday plan commitment.</div>
+        <div class="eod-fields">
+          <div class="eod-field">
+            <label>1. Score (5 min) — what hit, what missed</label>
+            <textarea data-revkey="${wk.id}|score" placeholder="Close: ✓/✗ · Whales 100: ✓/✗ · LinkedIn 24: ✓/✗ · Beehiiv 15: ✓/✗">${escape(state.review[`${wk.id}|score`] || '')}</textarea>
+          </div>
+          <div class="eod-field">
+            <label>2. What broke (10 min)</label>
+            <textarea data-revkey="${wk.id}|broke" placeholder="Specific blockers, not 'time management'...">${escape(state.review[`${wk.id}|broke`] || '')}</textarea>
+          </div>
+          <div class="eod-field">
+            <label>3. Next week's #1 — Britt</label>
+            <input type="text" data-revkey="${wk.id}|next-britt" placeholder="One concrete deliverable" value="${escape(state.review[`${wk.id}|next-britt`] || '')}">
+          </div>
+          <div class="eod-field">
+            <label>3. Next week's #1 — Bridgette</label>
+            <input type="text" data-revkey="${wk.id}|next-bridgette" placeholder="One concrete deliverable" value="${escape(state.review[`${wk.id}|next-bridgette`] || '')}">
+          </div>
+          <div class="eod-field">
+            <label>4. Sunday 7 PM commit — Bridgette builds next week's daily sheets</label>
+            <input type="text" data-revkey="${wk.id}|sunday" placeholder="Confirmed scheduled" value="${escape(state.review[`${wk.id}|sunday`] || '')}">
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  view.innerHTML = html;
+  attachWeekHandlers();
+}
+
+function attachWeekHandlers() {
+  document.querySelectorAll('[data-week]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.selectedWeek = btn.dataset.week;
+      saveState();
+      renderWeek();
+    });
+  });
+  document.querySelectorAll('[data-metric]').forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.dataset.metric;
+      state.metrics[id] = !state.metrics[id];
+      saveState();
+      renderWeek();
+    });
+  });
+  document.querySelectorAll('[data-revkey]').forEach(el => {
+    el.addEventListener('input', () => {
+      state.review[el.dataset.revkey] = el.value;
+      saveState();
+    });
+  });
+}
+
+/* ---------- MONTH VIEW ---------- */
+
+function renderMonth() {
+  const view = document.getElementById('view-month');
+
+  const counts = { not_started: 0, in_progress: 0, done: 0 };
+  GOALS.forEach(g => {
+    const status = state.goals[g.num] || 'not_started';
+    counts[status]++;
+  });
+  const total = GOALS.length;
+  const pct = Math.round((counts.done / total) * 100);
+
+  let html = `
+    <div class="hero">
+      <div class="hero-row">
+        <div>
+          <h1>May 2026 — Master Plan</h1>
+          <div class="hero-meta">${total} goals · 23 days · ~16 working days · <strong>Window: May 8 – May 31</strong></div>
+        </div>
+        <div class="progress-summary">
+          <div>
+            <div class="progress-num">${counts.done}<span class="total"> / ${total}</span></div>
+            <div class="progress-label">Goals done · ${pct}%</div>
+            <div class="progress-bar"><div style="width:${pct}%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="month-summary">
+      ${WEEKS.map((w, i) => `
+        <div class="week-summary-card">
+          <div class="num">Week ${i+1} · ${w.dates.split(' – ')[0].replace('Mon ', '')}</div>
+          <div class="theme">${w.theme}</div>
+          <div class="focus">${escape(w.focus)}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <table class="goals">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Goal</th>
+          <th>Owner</th>
+          <th>Target</th>
+          <th>Week</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${GOALS.map(g => {
+          const status = state.goals[g.num] || 'not_started';
+          const label = status === 'not_started' ? 'Not started' : status === 'in_progress' ? 'In progress' : 'Done';
+          return `
+            <tr>
+              <td class="goal-num">${g.num}</td>
+              <td class="goal-text">${escape(g.text)}</td>
+              <td class="goal-text" style="font-weight:400;color:var(--text-muted);font-size:12px;">${escape(g.owner)}</td>
+              <td style="font-variant-numeric:tabular-nums;font-weight:500;">${escape(g.target)}</td>
+              <td style="color:var(--text-muted);font-size:12px;">${escape(g.week)}</td>
+              <td><span class="status-pill" data-goal="${g.num}" data-status="${status}">${label}</span></td>
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    </table>
+
+    <div class="not-in-may">
+      <div class="label">What's NOT in May (be honest)</div>
+      <div class="body">
+        <strong>Britt's cousins' projects</strong> (metal roofing social, Skool fitness community) — push to <strong>June 8+</strong> unless they fit in &lt;2 hrs/week. Training reps, not revenue.<br>
+        <strong>GHL rebuild of Cash Surge funnel</strong> — explicitly June (Build_Queue #01).
+      </div>
+    </div>
+  `;
+
+  view.innerHTML = html;
+
+  document.querySelectorAll('.status-pill[data-goal]').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const num = parseInt(pill.dataset.goal, 10);
+      const cur = state.goals[num] || 'not_started';
+      const next = cur === 'not_started' ? 'in_progress' : cur === 'in_progress' ? 'done' : 'not_started';
+      state.goals[num] = next;
+      saveState();
+      renderMonth();
+    });
+  });
+}
+
+/* ---------- REFERENCE VIEW ---------- */
+
+function renderReference() {
+  const view = document.getElementById('view-reference');
+
+  const archCard = `
+    <div class="ref-card full">
+      <h2>📐 Offer architecture</h2>
+      <div class="ref-sub">Source of truth: <code>03_Offers/README.md</code>. If you read it elsewhere and it disagrees, this wins.</div>
+      <div class="arch-flow">                 Money Leaks Snapshot              free, self-serve, ScoreApp
+                         │ CTA → book call
+                         ▼
+                 Money Leaks Scorecard Call        free, live Zoom, 30 min
+                         │ Diagnoses → ONE track
+        ┌────────────────┴────────────────┐
+        ▼                                  ▼
+  TRACK 1: AI / Automation           TRACK 2: Financial Edge
+  (ServiceSignal AI engine)          (Financial Edge engine)</div>
+    </div>
+  `;
+
+  const offersCard = `
+    <div class="ref-card full">
+      <h2>📦 What we sell</h2>
+      <div class="ref-sub">For Britt: this is the lineup. Tape it to your monitor.</div>
+
+      <div class="track">
+        <div class="track-header" style="border-color:#a47e3b">
+          <div class="track-label" style="color:#a47e3b">Free entry</div>
+          <div class="track-name">The gate to every paid offer</div>
+        </div>
+        <div class="offer">
+          <div class="offer-name">Money Leaks Snapshot <span class="offer-tag free">FREE</span></div>
+          <div class="offer-meta"><strong>Self-serve</strong> ScoreApp assessment · 5–10 min · CTA: book the Scorecard Call</div>
+        </div>
+        <div class="offer">
+          <div class="offer-name">Money Leaks Scorecard Call <span class="offer-tag free">FREE</span></div>
+          <div class="offer-meta"><strong>Live Zoom</strong> · 30 min · Diagnoses Track 1 or Track 2 · Recommends ONE next step</div>
+        </div>
+      </div>
+
+      <div class="track">
+        <div class="track-header t1">
+          <div class="track-label t1">Track 1 · ServiceSignal AI</div>
+          <div class="track-name">Front-end revenue engine</div>
+        </div>
+        <div class="offer">
+          <div class="offer-name">Cash Surge Sprint <span class="offer-tag paid">$3K · 30 days</span></div>
+          <div class="offer-meta"><strong>30-day reactivation</strong> of 12+ month dead list · ServiceTitan · 4× ROI guarantee or second sprint free</div>
+        </div>
+        <div class="offer">
+          <div class="offer-name">AI Strategy Blueprint <span class="offer-tag paid">$5K–$10K · 3–6 wk</span></div>
+          <div class="offer-meta"><strong>Whole-business audit</strong> via AuditFlo · ranked recs across 30-day / 3–9 mo / 9–18 mo horizons</div>
+        </div>
+      </div>
+
+      <div class="track">
+        <div class="track-header t2">
+          <div class="track-label t2">Track 2 · Financial Edge</div>
+          <div class="track-name">Back-end profit & cash engine</div>
+        </div>
+        <div class="offer">
+          <div class="offer-name">Books-Connected Sprint <span class="offer-tag paid">$2K · 7 days</span></div>
+          <div class="offer-meta"><strong>Connect QBO + banks + ServiceTitan</strong> · clean COA · first Edge Report (4 numbers) · required before DFY</div>
+        </div>
+        <div class="offer">
+          <div class="offer-name">DFY Bookkeeping <span class="offer-tag paid">$1,250–$1,750 / 4-wk cycle</span></div>
+          <div class="offer-meta">3 tiers: <strong>$1,250 / $1,500 / $1,750</strong> · 13 cycles/year · 6-cycle minimum · review call per cycle</div>
+        </div>
+        <div class="offer">
+          <div class="offer-name">Financial Edge Community on Skool <span class="offer-tag paid">$149/mo</span></div>
+          <div class="offer-meta"><strong>Off-ramp / fallback</strong> for not-yet-Sprint-ready leads · 4–5 calculators · "CFO in your pocket"</div>
+        </div>
+        <div class="offer">
+          <div class="offer-name">Fractional CFO <span class="offer-tag future">FUTURE · ≥12 mo</span></div>
+          <div class="offer-meta">Deferred until ≥May 2027 · requires ≥6 cycles of clean DFY first</div>
+        </div>
+      </div>
+
+      <div class="pitch">When someone asks Britt at the gym: We help home services owners turn their data into booked jobs, real profit, and reliable cash. Want a free Money Leaks Snapshot? → send the ScoreApp link.</div>
+    </div>
+  `;
+
+  const cadenceCard = `
+    <div class="ref-card">
+      <h2>📅 Standing rhythm</h2>
+      <div class="ref-sub">Lock these in your calendars. Non-negotiable.</div>
+      <table class="cadence-table">
+        ${STANDING_RHYTHM.map(r => `
+          <tr>
+            <td class="when">${escape(r.when)}</td>
+            <td>
+              <div>${escape(r.what)}</div>
+              <div class="who">${escape(r.who)}</div>
+            </td>
+            <td class="dur">${escape(r.dur)}</td>
+          </tr>
+        `).join('')}
+      </table>
+    </div>
+  `;
+
+  const risksCard = `
+    <div class="ref-card">
+      <h2>⚠️ Risks → how Plumbline neutralizes them</h2>
+      <div class="ref-sub">You named these. Here's the system that catches them.</div>
+      ${RISKS.map(r => `
+        <div class="risk">
+          <div class="risk-name">${escape(r.name)}</div>
+          <div class="risk-fix">${escape(r.fix)}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  const usageCard = `
+    <div class="ref-card full">
+      <h2>📖 How to use Plumbline</h2>
+      <div class="ref-sub">Four touch points keep it alive. The brass line on each card is the literal anchor.</div>
+      <table class="cadence-table">
+        <tr>
+          <td class="when">Sunday, 30 min</td>
+          <td>
+            <div><strong>Bridgette alone</strong> — review monthly plan → set weekly plan → draft daily sheets for Mon–Fri</div>
+            <div class="who">Without this, Monday is fiction.</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="when">Mon–Fri, 8:00 AM</td>
+          <td>
+            <div><strong>Britt</strong> — open daily prep sheet. Work top to bottom. Check off as you go.</div>
+            <div class="who">If it isn't on the daily sheet, it doesn't happen.</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="when">Daily, 9:00 AM, 10 min</td>
+          <td>
+            <div><strong>Both</strong> — stand-up. What's done, what's stuck, what's today.</div>
+            <div class="who">Standing — same time every day.</div>
+          </td>
+        </tr>
+        <tr>
+          <td class="when">Friday, 3:00 PM, 30 min</td>
+          <td>
+            <div><strong>Both</strong> — weekly review. Score the week. Set next week.</div>
+            <div class="who">Live in the Week tab when this happens.</div>
+          </td>
+        </tr>
+      </table>
+      <div class="callout">
+        <strong>The bench rule:</strong> Britt gets 4–6 binary tasks/day max. If a task is already done before today (or finishes early), use the bench to promote what's next. No improvising — pull from a list Bridgette curates Sunday.
+      </div>
+    </div>
+  `;
+
+  const juneCard = `
+    <div class="ref-card full">
+      <h2>📆 June setup (Friday May 29)</h2>
+      <div class="ref-sub">So you're not building this from scratch on June 1.</div>
+      <div style="font-size:13px;line-height:1.6;color:var(--text);">
+        Friday May 29: build June's Plumbline plan. Update:
+        <ul style="list-style:none;margin-top:10px;">
+          <li style="padding:4px 0;padding-left:20px;position:relative;">
+            <span style="position:absolute;left:0;color:var(--brass-deep);">→</span>
+            Monthly plan with June goals (start: GHL rebuild of Cash Surge — Build_Queue #01, finish AI Strategy Blueprint pilot runs, close 3 more clients, video #3+#4, Skool growth)
+          </li>
+          <li style="padding:4px 0;padding-left:20px;position:relative;">
+            <span style="position:absolute;left:0;color:var(--brass-deep);">→</span>
+            Weekly themes for the 4 June weeks
+          </li>
+          <li style="padding:4px 0;padding-left:20px;position:relative;">
+            <span style="position:absolute;left:0;color:var(--brass-deep);">→</span>
+            First week's daily prep sheets
+          </li>
+        </ul>
+        <div style="margin-top:12px;color:var(--text-muted);">By July, building this takes 90 minutes.</div>
+      </div>
+    </div>
+  `;
+
+  view.innerHTML = `
+    ${archCard}
+    <div style="margin-top:16px;">
+      ${offersCard}
+    </div>
+    <div class="ref-grid" style="margin-top:16px;">
+      ${cadenceCard}
+      ${risksCard}
+    </div>
+    <div style="margin-top:16px;">
+      ${usageCard}
+    </div>
+    <div style="margin-top:16px;">
+      ${juneCard}
+    </div>
+    <div style="margin-top:24px;display:flex;justify-content:flex-end;">
+      <button class="reset-btn" id="resetBtn">Reset all Plumbline data</button>
+    </div>
+  `;
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if (confirm('Reset every checkbox, status, note, and bench item? This wipes your local progress and cannot be undone.')) {
+      localStorage.removeItem(STORAGE_KEY);
+      state = loadState();
+      renderAll();
+    }
+  });
+}
+
+/* ---------- UTILITIES ---------- */
+
+function escape(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/* ---------- VIEW SWITCH ---------- */
+
+function setView(v) {
+  state.view = v;
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById(`view-${v}`).classList.add('active');
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+  saveState();
+  if (v === 'today') renderToday();
+  if (v === 'week') renderWeek();
+  if (v === 'month') renderMonth();
+  if (v === 'reference') renderReference();
+}
+
+function setPerson(p) {
+  state.person = p;
+  document.querySelectorAll('.person-btn').forEach(b => b.classList.toggle('active', b.dataset.person === p));
+  saveState();
+  if (state.view === 'today') renderToday();
+}
+
+function renderAll() {
+  document.getElementById('brandDate').textContent = formatBrandDate();
+  document.querySelectorAll('.person-btn').forEach(b => b.classList.toggle('active', b.dataset.person === state.person));
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.view === state.view));
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById(`view-${state.view}`).classList.add('active');
+  renderToday();
+  renderWeek();
+  renderMonth();
+  renderReference();
+}
+
+/* ---------- INIT ---------- */
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.tab').forEach(b => {
+    b.addEventListener('click', () => setView(b.dataset.view));
+  });
+  document.querySelectorAll('.person-btn').forEach(b => {
+    b.addEventListener('click', () => setPerson(b.dataset.person));
+  });
+  renderAll();
+});
+</script>
+</body>
+</html>
